@@ -1,0 +1,27 @@
+k<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Characters</title>
+</head>
+<body>
+    <h1>Marvel Characters</h1>
+    {% if characters %}
+        <ul>
+            {% for character in characters %}
+                <li>
+                    <h2>{{ character.name }}</h2>
+                    {% if character.thumbnail %}
+                        <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" 
+                             alt="{{ character.name }}" width="150">
+                    {% endif %}
+                    <p>{{ character.description or "No description available." }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No characters found.</p>
+    {% endif %}
+</body>
+</html>
