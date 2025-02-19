@@ -1,27 +1,144 @@
-k<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Characters</title>
+    <title>Marvel Characters Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --marvel-red: #ED1D24;
+            --marvel-blue: #0476F2;
+            --marvel-dark: #202020;
+        }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: var(--marvel-dark);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Bangers', cursive;
+            text-align: center;
+            color: var(--marvel-red);
+            font-size: 4rem;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 var(--marvel-blue), 
+                         6px 6px 0 var(--marvel-dark);
+            letter-spacing: 2px;
+            animation: marvelous 2s ease-in-out infinite;
+        }
+        @keyframes marvelous {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            opacity: 0;
+            animation: fadeInGrid 1s ease-out forwards;
+        }
+        @keyframes fadeInGrid {
+            to { opacity: 1; }
+        }
+        .character-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInCard 0.5s ease-out forwards;
+        }
+        @keyframes fadeInCard {
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        .character-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(237, 29, 36, 0.3);
+        }
+        .character-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .character-card:hover img {
+            transform: scale(1.1);
+        }
+        .character-info {
+            padding: 15px;
+            background-color: var(--marvel-blue);
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .character-card:hover .character-info {
+            background-color: var(--marvel-red);
+        }
+        .character-info h2 {
+            font-family: 'Bangers', cursive;
+            margin: 0 0 10px;
+            color: #fff;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .character-info p {
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .no-characters {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 50px;
+        }
+        @media (max-width: 600px) {
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            h1 {
+                font-size: 3rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Marvel Characters</h1>
-    {% if characters %}
-        <ul>
-            {% for character in characters %}
-                <li>
-                    <h2>{{ character.name }}</h2>
-                    {% if character.thumbnail %}
-                        <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" 
-                             alt="{{ character.name }}" width="150">
-                    {% endif %}
-                    <p>{{ character.description or "No description available." }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No characters found.</p>
-    {% endif %}
+    <div class="container">
+        <h1>Marvel Characters</h1>
+        {% if characters %}
+            <div class="character-grid">
+                {% for character in characters %}
+                    <div class="character-card" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                        {% if character.thumbnail %}
+                            <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" 
+                                 alt="{{ character.name }}" loading="lazy">
+                        {% else %}
+                            <img src="https://via.placeholder.com/250x250.png?text=No+Image" alt="No Image Available" loading="lazy">
+                        {% endif %}
+                        <div class="character-info">
+                            <h2>{{ character.name }}</h2>
+                            <p>{{ character.description|truncate(100, true, '...') or "No description available." }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-characters">No characters found.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
+
+

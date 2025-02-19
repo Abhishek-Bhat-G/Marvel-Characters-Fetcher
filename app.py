@@ -30,7 +30,7 @@ class CustomHTTPAdapter(HTTPAdapter):
         return super().init_poolmanager(*args, **kwargs)
 
 # Function to fetch characters from Marvel API
-def fetch_characters(total_pages=10):
+def fetch_characters(total_pages=18):
     import hashlib
     import time
 
@@ -74,7 +74,7 @@ def fetch_characters(total_pages=10):
 # Route to display characters
 @app.route('/')
 def index():
-    total_pages = 10  # Adjust this number based on how many pages you want to fetch
+    total_pages = 18  # Adjust this number based on how many pages you want to fetch
     characters = fetch_characters(total_pages)
     return render_template('index.html', characters=characters)
 
