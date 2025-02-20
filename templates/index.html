@@ -38,6 +38,29 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        #search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
         .character-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -117,8 +140,11 @@
 <body>
     <div class="container">
         <h1>Marvel Characters</h1>
-        {% if characters %}
-            <div class="character-grid">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search characters...">
+        </div>
+        <div id="character-grid" class="character-grid">
+            {% if characters %}
                 {% for character in characters %}
                     <div class="character-card" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
                         {% if character.thumbnail %}
@@ -133,11 +159,51 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>
-        {% else %}
-            <p class="no-characters">No characters found.</p>
-        {% endif %}
+            {% else %}
+                <p class="no-characters">No characters found.</p>
+            {% endif %}
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const characterGrid = document.getElementById('character-grid');
+            const characterCards = characterGrid.querySelectorAll('.character-card');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                characterCards.forEach(card => {
+                    const characterName = card.querySelector('h2').textContent.toLowerCase();
+                    const characterDescription = card.querySelector('p').textContent.toLowerCase();
+
+                    if (characterName.includes(searchTerm) || characterDescription.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show "No characters found" message if all cards are hidden
+                const visibleCards = characterGrid.querySelectorAll('.character-card[style="display: ;"]');
+                if (visibleCards.length === 0) {
+                    let noCharactersMsg = characterGrid.querySelector('.no-characters');
+                    if (!noCharactersMsg) {
+                        noCharactersMsg = document.createElement('p');
+                        noCharactersMsg.className = 'no-characters';
+                        noCharactersMsg.textContent = 'No characters found.';
+                        characterGrid.appendChild(noCharactersMsg);
+                    }
+                } else {
+                    const noCharactersMsg = characterGrid.querySelector('.no-characters');
+                    if (noCharactersMsg) {
+                        noCharactersMsg.remove();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
