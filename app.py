@@ -27,7 +27,7 @@ class CustomHTTPAdapter(HTTPAdapter):
         return super().init_poolmanager(*args, **kwargs)
 
 
-def fetch_characters(total_pages=18):
+def fetch_characters(total_pages=17):
     import hashlib
     import time
 
